@@ -12,30 +12,24 @@ Usage
 
 ```ruby
 
-@gaga = Gaga.new(:path => File.expand_path('..', __FILE__))
+@gaga = Gaga.new(:repo => File.expand_path('..', __FILE__))
 
 # SET
-
 @gaga['lady'] = "gaga"
 
 # GET
-
 @gaga['lady'] #=> "gaga"
 
 # KEYS
-
 @gaga.keys  #=> ['lady']
 
 # DELETE
-
 @gaga.delete('lady') #=> 'gaga'
 
 # LOG
-
 @gaga.log('key')
 
 # Produces:
-
 [
  {"message"=>"all clear","committer"=>{"name"=>"Matt Sears", "email"=>"matt@mattsears.com"}, "committed_date"=>"2011-09-05..."},
  {"message"=>"set 'lady' ", "committer"=>{"name"=>"Matt Sears", "email"=>"matt@mattsears.com"}, "committed_date"=>"2011-09-05..."}
@@ -52,7 +46,6 @@ Installing Gaga
 
 ```
 $ gem install gaga
-
 ```
 
 Contributing
