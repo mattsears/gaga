@@ -1,16 +1,18 @@
-Gaga (Work in Progress)
+Gaga
 ==========
 
-Git as a key-value store! Build with [Grit](https://github.com/mojombo/grit), it supports SET, GET, KEYS, and DELETE operations. In addition, we can also get the change history key/values.
+Gaga is a Git-backed key/value store written in Ruby. Built with
+[Grit](https://github.com/mojombo/grit), it supports SET, GET, KEYS, and DELETE
+operations. And since it's Git, we can easily enhance it to include other
+awesome Git features such as branches, diffs, reverting, and more!
 
-It can easily be enhanced to include other git features such as branches, diffs, etc
 
-Example:
+Usage
+----------
 
 ```ruby
 
 @gaga = Gaga.new(:path => File.expand_path('..', __FILE__))
-@gaga.clear
 
 # SET
 
@@ -40,4 +42,31 @@ Example:
  {"message"=>"delete 'lady' ", "committer"=>{"name"=>"Matt Sears", "email"=>"matt@mattsears.com"}, "committed_date"=>"2011-09-05..."}
 ]
 
+# Remove all items from the store
+@gaga.clear
+
 ```
+
+Installing Gaga
+----------
+
+```
+$ gem install gaga
+
+```
+
+Contributing
+----------
+
+Once you've made your great commits:
+
+1. Fork Gaga
+2. Create a topic branch - git checkout -b my_branch
+3. Push to your branch - git push origin my_branch
+4. Create a Pull Request from your branch
+5. That's it!
+
+Author
+----------
+[Matt Sears](https://wwww.mattsears.com) :: @mattsears
+
