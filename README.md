@@ -26,19 +26,38 @@ Usage
 # DELETE
 @gaga.delete('lady') #=> 'gaga'
 
-# LOG
-@gaga.log('key')
+# Remove all items from the store
+@gaga.clear
 
-# Produces:
+```
+
+### Branches
+
+You can always store key/values in separate branches.  Just specify the `branch`
+option parameter:
+
+```ruby
+@gaga = Gaga.new(:repo => path_to_repo, :branch => 'config')
+```
+
+Though not recommended, Gaga can store the identical key in different branches.
+
+### Logs
+
+Gaga keeps a history of key/value saves.
+
+```ruby
+@gaga.log('key')
+```
+
+Returns an array of commit messages along with meta data about each key/value save.
+
+```ruby
 [
  {"message"=>"all clear","committer"=>{"name"=>"Matt Sears", "email"=>"matt@mattsears.com"}, "committed_date"=>"2011-09-05..."},
  {"message"=>"set 'lady' ", "committer"=>{"name"=>"Matt Sears", "email"=>"matt@mattsears.com"}, "committed_date"=>"2011-09-05..."}
  {"message"=>"delete 'lady' ", "committer"=>{"name"=>"Matt Sears", "email"=>"matt@mattsears.com"}, "committed_date"=>"2011-09-05..."}
 ]
-
-# Remove all items from the store
-@gaga.clear
-
 ```
 
 Installing Gaga
