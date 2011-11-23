@@ -9,8 +9,12 @@ describe Gaga do
   }
 
   before do
-    @store = Gaga.new(:repo => tmp_dir)
-    @store.clear
+    @store  = Gaga.new(:repo => tmp_dir, :branch => :lady)
+    @master = Gaga.new(:repo => tmp_dir)
+  end
+
+  after do
+    remove_tmpdir!
   end
 
   @types.each do |type, (key, key2)|
@@ -22,6 +26,12 @@ describe Gaga do
 
     it "reads from keys" do
       @store[key].must_be_nil
+    end
+
+    it 'guarantess the key is stored in the right branch' do
+      @store[key] = 'value'
+      @master[key].must_be_nil
+      @store[key].must_equal "value"
     end
 
     it "returns a list of keys" do
@@ -85,9 +95,11 @@ describe Gaga do
       @store[key].must_equal "value"
     end
 
-    it "returns a list of commit history for the key" do
-      @store.log(key).wont_be_empty
+    it 'stores a log message for the key' do
+      @store[key] = "value"
+      @store.log(key).first['message'].must_equal("set '#{key}'")
     end
+
   end
 
 end
