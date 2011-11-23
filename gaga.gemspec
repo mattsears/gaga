@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Gaga::VERSION
   s.authors     = ["Matt Sears"]
   s.email       = ["matt@mattsears.com"]
-  s.homepage    = "http://github.com/mattsears/gaga"
+  s.homepage    = "http://mtts.rs/gaga"
   s.summary     = %q{Gaga is a Git-backed key/value store}
   s.description = %q{Gaga is a Git-backed key/value store}
   s.rubyforge_project = "gaga"
