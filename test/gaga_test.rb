@@ -23,6 +23,26 @@ describe Gaga do
       @store[key] = "value"
       @store[key].must_equal "value"
     end
+    
+    it "writes String values to keys with explicit custom log data" do
+      @store.set(key, "value", {:message => "Custom message", :author => {:name => 'Test', :email => 'test@example.com'} })
+      @store[key].must_equal "value"
+      
+      entry = @store.log(key).first
+      entry['message'].must_equal "Custom message"
+      entry['author'].must_equal({'name' => 'Test', 'email' => 'test@example.com'})
+    end
+    
+    it "writes String values to keys with global custom log data" do
+      store = Gaga.new(:repo => tmp_dir, :branch => :lady, :author => {:name => 'Test', :email => 'test@example.com'})
+      
+      store.set(key, "value", {:message => "Custom message"})
+      store[key].must_equal "value"
+      
+      entry = store.log(key).first
+      entry['message'].must_equal "Custom message"
+      entry['author'].must_equal({'name' => 'Test', 'email' => 'test@example.com'})
+    end
 
     it "reads from keys" do
       @store[key].must_be_nil
@@ -70,6 +90,15 @@ describe Gaga do
       @store.delete(key).must_equal "value"
       @store.key?(key).must_equal false
     end
+    
+    it "removes a key using a custom commit message" do
+      @store[key] = "value"
+      @store.delete(key, {:message => "Removed it"}).must_equal "value"
+      @store.key?(key).must_equal false
+      
+      entry = @store.log(key).first
+      entry['message'].must_equal "Removed it"
+    end
 
     it "returns nil from delete if an element for a key does not exist" do
       @store.delete(key).must_be_nil
@@ -81,6 +110,19 @@ describe Gaga do
       @store.clear
       @store.key?(key).wont_equal true
       @store.key?(key2).wont_equal true
+    end
+    
+    it "removes all keys from the store with clear and custom commit message" do
+      @store[key] = "value"
+      @store[key2] = "value2"
+      @store.clear({:message => "All gone"})
+      @store.key?(key).wont_equal true
+      @store.key?(key2).wont_equal true
+      
+      [key, key2].each do |k|
+        entry = @store.log(k).first
+        entry['message'].must_equal "All gone"
+      end
     end
 
     it "does not run the block if the #{type} key is available" do

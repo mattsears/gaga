@@ -5,6 +5,8 @@ require 'gaga/version'
 class Gaga
 
   def initialize(options = {})
+    @author = options.delete(:author)
+    @committer = options.delete(:committer)
     @options = options
     unless ::File.exists?(File.join(path,'.git'))
       Grit::Repo.init(path)
@@ -17,8 +19,8 @@ class Gaga
   #   @store.set('key', 'value')
   #
   # Returns nothing
-  def set(key, value)
-    save("set '#{key}'") do |index|
+  def set(key, value, opts = {})
+    save(setup_commit_options({:message => "set '#{key}'"}.merge(opts))) do |index|
       index.add(key_for(key), encode(value))
     end
   end
@@ -68,17 +70,18 @@ class Gaga
   #  @store.delete('key')
   #
   # Returns nothing
-  def delete(key, *)
+  def delete(key, opts = {})
+    options = setup_commit_options({:message => "deleted #{key}"}.merge(opts))
     self[key].tap do
-      save("deleted #{key}") {|index| index.delete(key_for(key)) }
+      save(options) {|index| index.delete(key_for(key)) }
     end
   end
 
   # Deletes all contents of the store
   #
   # Returns nothing
-  def clear
-    save("all clear") do |index|
+  def clear(opts = {})    
+    save(setup_commit_options({:message => "all clear"}.merge(opts))) do |index|
       if tree = index.current_tree
         tree.contents.each do |entry|
           index.delete(key_for(entry.name))
@@ -108,6 +111,13 @@ class Gaga
   end
 
   private
+  
+  def setup_commit_options(opts = {})
+    {
+      :author => @author,
+      :committer => @committer
+    }.merge(opts)
+  end
 
   # Format the given key so that it ensures it's git worthy
   def key_for(key)
@@ -130,14 +140,16 @@ class Gaga
   end
 
   # Commits the the value into the git repository with the given commit message
-  def save(message)
+  def save(options)
+    author = options[:author] ? Grit::Actor.new(options[:author][:name], options[:author][:email]) : nil
+    
     index = git.index
     if head
       commit = head.commit
       index.current_tree = commit.tree
     end
     yield index
-    index.commit(message, :parents => Array(commit), :head => branch) if index.tree.any?
+    index.commit(options[:message], :parents => Array(commit), :author => author, :head => branch) if index.tree.any?
   end
 
   # Converts the value to yaml format
