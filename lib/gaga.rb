@@ -121,7 +121,7 @@ class Gaga
 
   # The git branch to use for this store
   def branch
-    @options[:branch].to_s || 'master'
+    (@options[:branch] || 'master').to_s
   end
 
   # Checks out the branch on the repo
