@@ -151,7 +151,24 @@ describe Gaga do
       @store[key] = "value"
       @store.log(key).first['message'].must_equal("set '#{key}'")
     end
-
+  end
+  
+  it 'creates a bare repository' do
+    bare = Gaga.new(:repo => tmp_bare, :branch => :lady)
+    File.exists?(File.join(tmp_bare, '.git')).must_equal false
+    File.exists?(File.join(tmp_bare, 'refs')).must_equal true
+    bare['key1'] = 'Value 1'
+    bare['key2'] = 'Value 2'
+    bare['key3'] = 'Value 3'
+    bare['key1'].must_equal 'Value 1'
+    bare['key2'].must_equal 'Value 2'
+    bare.keys.must_equal %w(key1 key2 key3)
+    bare.delete('key1')
+    bare['key1'].must_be_nil
+    bare.clear
+    bare.keys.must_equal []
+    
+    remove_tmpdir!(tmp_bare)
   end
 
 end
