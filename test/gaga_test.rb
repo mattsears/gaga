@@ -27,6 +27,16 @@ describe Gaga do
     it "reads from keys" do
       @store[key].must_be_nil
     end
+    
+    it "should default to master when no branch is specified" do
+      value = 'testing'
+      @master[key] = value
+      @master[key].must_equal value
+      @store[key].must_be_nil
+      
+      tmp = Gaga.new(:repo => tmp_dir, :branch => :master)
+      tmp[key].must_equal value
+    end
 
     it 'guarantess the key is stored in the right branch' do
       @store[key] = 'value'
