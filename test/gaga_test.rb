@@ -43,6 +43,19 @@ describe Gaga do
       entry['message'].must_equal "Custom message"
       entry['author'].must_equal({'name' => 'Test', 'email' => 'test@example.com'})
     end
+    
+    it "does not create empty commit" do
+      grit = Grit::Repo.new(tmp_dir)      
+      initial_count = grit.commit_count
+      
+      @master.set(key, "value", {:message => 'First commit'})
+      @master.set(key, "value", {:message => 'Second commit'})
+      
+      current_count = grit.commit_count
+      
+      (current_count - initial_count).must_equal 1
+      @master[key].must_equal "value"
+    end
 
     it "reads from keys" do
       @store[key].must_be_nil
