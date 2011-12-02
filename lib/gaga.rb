@@ -20,8 +20,10 @@ class Gaga
   #
   # Returns nothing
   def set(key, value, opts = {})
-    save(setup_commit_options({:message => "set '#{key}'"}.merge(opts))) do |index|
-      index.add(key_for(key), encode(value))
+    unless value == get(key)
+      save(setup_commit_options({:message => "set '#{key}'"}.merge(opts))) do |index|
+        index.add(key_for(key), encode(value))
+      end
     end
   end
 
