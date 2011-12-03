@@ -8,8 +8,11 @@ class Gaga
     @author = options.delete(:author)
     @committer = options.delete(:committer)
     @options = options
-    unless ::File.exists?(File.join(path,'.git'))
-      Grit::Repo.init(path)
+    
+    if path.end_with?('.git/')
+      Grit::Repo.init_bare(path) unless File.exists?(File.join(path,'refs'))
+    else
+      Grit::Repo.init(path) unless File.exists?(File.join(path,'.git'))
     end
   end
 
