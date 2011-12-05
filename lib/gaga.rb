@@ -147,6 +147,7 @@ class Gaga
   # Commits the the value into the git repository with the given commit message
   def save(options)
     author = options[:author] ? Grit::Actor.new(options[:author][:name], options[:author][:email]) : nil
+    committer = options[:committer] ? Grit::Actor.new(options[:committer][:name], options[:committer][:email]) : nil
     
     index = git.index
     if head
@@ -154,7 +155,7 @@ class Gaga
       index.current_tree = commit.tree
     end
     yield index
-    index.commit(options[:message], :parents => Array(commit), :author => author, :head => branch) if index.tree.any?
+    index.commit(options[:message], :parents => Array(commit), :author => author, :committer => committer, :head => branch) if index.tree.any?
   end
 
   # Converts the value to yaml format
