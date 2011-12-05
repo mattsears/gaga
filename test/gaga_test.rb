@@ -34,7 +34,12 @@ describe Gaga do
     end
     
     it "writes String values to keys with global custom log data" do
-      store = Gaga.new(:repo => tmp_dir, :branch => :lady, :author => {:name => 'Test', :email => 'test@example.com'})
+      store = Gaga.new(
+        :repo => tmp_dir, 
+        :branch => :lady, 
+        :author => {:name => 'Test', :email => 'test@example.com'},
+        :committer => {:name => 'Test2', :email => 'test2@example.com'}
+      )
       
       store.set(key, "value", {:message => "Custom message"})
       store[key].must_equal "value"
@@ -42,6 +47,7 @@ describe Gaga do
       entry = store.log(key).first
       entry['message'].must_equal "Custom message"
       entry['author'].must_equal({'name' => 'Test', 'email' => 'test@example.com'})
+      entry['committer'].must_equal({'name' => 'Test2', 'email' => 'test2@example.com'})
     end
     
     it "does not create empty commit" do
