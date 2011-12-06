@@ -60,6 +60,8 @@ Returns an array of commit messages along with meta data about each key/value sa
 ]
 ```
 
+### Options
+
 Custom commit options can be set globally when creating a new Gaga instance, or
 passed in with calls to #set, #delete, or #clear.
 
