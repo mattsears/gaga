@@ -60,6 +60,44 @@ Returns an array of commit messages along with meta data about each key/value sa
 ]
 ```
 
+Custom commit options can be set globally when creating a new Gaga instance, or
+passed in with calls to #set, #delete, or #clear.
+
+Examples:
+
+```ruby
+# Global options
+store1 = Gaga.new(
+	:repo => '/path/to/repo/',
+	:branch => :example,
+	:author => {
+		:name => 'Jim Bob',
+		:email => 'jbob@example.com'
+	},
+	:committer => {
+		:name => 'Jane Doe',
+		:email => 'jdoe@example.com'
+	}
+)
+
+# Custom message when storing a key/value
+store1.set('key_1', 'Hello World', {:message => 'This is a custom commit log message'})
+
+store2 = Gaga.new(:repo => '/path/to/repo/', :branch => :example)
+
+# Assigns an author when storing a key/value
+store2.set('key_1', 'Goodbye', {
+	:message => 'Another custom log message',
+	:author => {
+		:name => 'Sally',
+		:email => 'sally@example.com'
+	}
+})
+
+# Delete operations can also have a custom message
+store2.delete('key_1', {:message => 'Farewell message'})
+```
+
 Installing Gaga
 ----------
 
